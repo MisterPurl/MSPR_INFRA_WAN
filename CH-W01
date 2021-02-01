@@ -1,0 +1,53 @@
+conf t
+
+ip cef
+mpls label protocol ldp
+
+int s1/0
+ip address 10.98.200.6 255.255.255.254
+description CH-W01 TO CH-W02
+mpls ip
+no shutdown
+int s1/1
+ip address 10.98.200.3 255.255.255.254
+description CH-W01 TO FR-W01
+mpls ip
+no shutdown
+int s1/2
+ip address 10.98.200.11 255.255.255.254
+description CH-W01 TO FR-W02
+mpls ip
+no shutdown
+
+int g3/0
+ip address 10.98.220.0 255.255.255.254
+description CH-W01 TO CH-CE-01
+no shutdown
+int g4/0
+ip address 10.98.220.2 255.255.255.254
+description CH-W01 TO CH-CE-02
+no shutdown
+
+int s1/3
+ip address 10.98.230.0 255.255.255.254
+description CH-W01 TO PE-DC-01
+no shutdown
+int s2/0
+ip address 10.98.230.2 255.255.255.254
+description CH-W01 TO PE-DC-02
+no shutdown
+
+int lo0
+ip address 10.98.199.3 255.255.255.255
+description loopback BGP
+no shutdown
+end
+
+conf t 
+router ospf 100
+network 10.98.200.6 0.0.0.1 area 0
+network 10.98.200.2 0.0.0.1 area 0
+network 10.98.200.10 0.0.0.1 area 0
+network 10.98.199.3 0.0.0.0 area 0
+network 10.98.220.0 0.0.0.1 area 2
+network 10.98.220.2 0.0.0.1 area 2

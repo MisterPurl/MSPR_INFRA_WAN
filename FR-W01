@@ -1,0 +1,58 @@
+conf t
+
+ip cef
+mpls label protocol ldp
+
+int s1/0
+ip address 10.98.200.0 255.255.255.254
+description FR-W01 TO FR-W02
+mpls ip
+no shutdown
+int s1/1
+ip address 10.98.200.2 255.255.255.254
+description FR-W01 TO CH-W01
+mpls ip
+no shutdown
+int s1/2
+ip address 10.98.200.8 255.255.255.254
+description FR-W01 TO CH-W02
+mpls ip
+no shutdown
+
+int g3/0
+ip address 10.98.210.0 255.255.255.254
+description FR-W01 TO FR-CE-01
+no shutdown
+int g4/0
+ip address 10.98.210.2 255.255.255.254
+description FR-W01 TO FR-CE-02
+no shutdown
+!
+int lo0
+ip address 10.98.199.1 255.255.255.255
+description loopback BGP
+no shutdown
+end
+!
+conf t 
+router ospf 100
+network 10.98.200.0 0.0.0.1 area 0
+network 10.98.200.2 0.0.0.1 area 0
+network 10.98.200.8 0.0.0.1 area 0
+network 10.98.199.1 0.0.0.0 area 0
+network 10.98.210.0 0.0.0.1 area 1
+network 10.98.210.2 0.0.0.1 area 1
+end
+!
+conf t 
+router bgp 5000
+redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
+neighbor 10.98.200.1 remote-as 5000
+neighbor 10.98.200.3 remote-as 5000
+neighbor 10.98.200.9 remote-as 5000
+no auto-summary
+!
+access-list 10 permit 192.168.0.0 0.0.255.255
+!
+route-map PERMIT_OSPF_INTO_BGP permit 10
+ match ip address 10
