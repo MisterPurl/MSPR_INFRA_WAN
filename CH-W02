@@ -51,3 +51,20 @@ network 10.98.200.4 0.0.0.1 area 0
 network 10.98.199.4 0.0.0.0 area 0
 network 10.98.220.4 0.0.0.1 area 2
 network 10.98.220.6 0.0.0.1 area 2
+end
+!
+conf t 
+router bgp 5000
+redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
+neighbor 10.98.199.1 remote-as 5000
+neighbor 10.98.199.3 remote-as 5000
+neighbor 10.98.199.2 remote-as 5000
+neighbor 1.1.1.1 remote-as 1836
+neighbor 2.2.2.2 remote-as 1836
+
+no auto-summary
+!
+access-list 10 permit 192.168.0.0 0.0.255.255
+!
+route-map PERMIT_OSPF_INTO_BGP permit 10
+ match ip address 10
