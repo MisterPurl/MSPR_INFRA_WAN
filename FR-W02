@@ -48,11 +48,8 @@ conf t
 router bgp 5000
 redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
 neighbor 10.98.199.1 remote-as 5000
-neighbor 10.98.199.1 update-source Loopback0
 neighbor 10.98.199.3 remote-as 5000
-neighbor 10.98.199.3 update-source Loopback0
 neighbor 10.98.199.4 remote-as 5000
-neighbor 10.98.199.4 update-source Loopback0
 no auto-summary
 !
 access-list 10 permit 192.168.0.0 0.0.255.255
