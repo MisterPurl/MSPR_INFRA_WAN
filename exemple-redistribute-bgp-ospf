@@ -1,0 +1,235 @@
+PEx1#sh ru
+Building configuration...
+
+Current configuration : 3466 bytes
+!
+! Last configuration change at 13:53:32 UTC Fri Apr 10 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname PEx1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+ip cef
+!
+ip vrf A
+ rd 100:100
+ route-target export 100:100
+ route-target import 100:100
+!
+ip vrf B
+ rd 101:101
+ route-target export 101:101
+ route-target import 101:101
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 192.168.9.17 255.255.255.255
+!
+interface FastEthernet0/0
+ no ip address
+ shutdown
+ duplex full
+!         
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface Serial2/0
+ description INTERCO PEx1 TO PE1
+ ip address 192.168.9.49 255.255.255.240
+ mpls ip
+ mpls label protocol ldp
+ serial restart-delay 0
+!
+interface Serial2/1
+ description INTERCO PEx1 TO CEx1A
+ ip vrf forwarding A
+ ip address 150.9.91.18 255.255.255.240
+ serial restart-delay 0
+!
+interface Serial2/2
+ description INTERCO PEx1 TO CEx1B
+ ip vrf forwarding B
+ ip address 150.9.91.34 255.255.255.240
+ serial restart-delay 0
+!
+interface Serial2/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Ethernet3/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/1
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/2
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/3
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/4
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/5
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/6
+ no ip address
+ shutdown
+ duplex full
+!
+interface Ethernet3/7
+ no ip address
+ shutdown
+ duplex full
+!         
+interface Serial4/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface GigabitEthernet5/0
+ no ip address
+ shutdown 
+ negotiation auto
+!
+!
+router eigrp 100
+ !
+ address-family ipv4 vrf A 
+  redistribute bgp 300 metric 1500 100 255 1 1500
+  network 150.9.91.16 0.0.0.15
+  autonomous-system 100
+ exit-address-family
+!
+!
+router eigrp 101
+ !
+ address-family ipv4 vrf B 
+  redistribute bgp 300 metric 1500 100 255 1 1500
+  network 150.9.91.32 0.0.0.15
+  autonomous-system 101
+ exit-address-family
+!
+router ospf 10
+ network 192.168.9.17 0.0.0.0 area 0
+ network 192.168.9.48 0.0.0.15 area 0
+!
+router bgp 300
+ bgp log-neighbor-changes
+ neighbor 192.168.9.33 remote-as 300
+ neighbor 192.168.9.33 update-source Loopback0
+ !
+ address-family vpnv4
+  neighbor 192.168.9.33 activate
+  neighbor 192.168.9.33 send-community both
+ exit-address-family
+ !
+ address-family ipv4 vrf A
+  redistribute connected
+  redistribute eigrp 100
+ exit-address-family
+ !
+ address-family ipv4 vrf B
+  redistribute connected
+  redistribute eigrp 101
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end

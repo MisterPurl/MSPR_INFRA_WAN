@@ -1,0 +1,25 @@
+conf t
+int g1/0
+ip address 10.98.210.1 255.255.255.254
+description FR-CE-01 TO FR-W01
+no shutdown
+int g2/0
+ip address 10.98.210.5 255.255.255.254
+description FR-CE-01 TO FR-W02
+no shutdown
+int f0/0
+ip address 10.203.0.2 255.255.255.254
+description FR-CE-01 TO FR-W02
+no shutdown
+vrrp 1 ip 10.203.0.1
+vrrp 1 description VIP-FR-DC
+vrrp 1 source-ip 10.203.0.2
+no vrrp 1 shutdown
+end
+!
+conf t
+router ospf 100
+network 10.98.210.0 0.0.0.1 area 1
+network 10.98.210.4 0.0.0.1 area 1
+network 10.203.0.0 0.0.0.255 area 1
+end

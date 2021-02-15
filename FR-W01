@@ -1,8 +1,8 @@
 conf t
-
+!
 ip cef
 mpls label protocol ldp
-
+!
 int s1/0
 ip address 10.98.200.0 255.255.255.254
 description FR-W01 TO FR-W02
@@ -18,7 +18,7 @@ ip address 10.98.200.8 255.255.255.254
 description FR-W01 TO CH-W02
 mpls ip
 no shutdown
-
+!
 int g3/0
 ip address 10.98.210.0 255.255.255.254
 description FR-W01 TO FR-CE-01
