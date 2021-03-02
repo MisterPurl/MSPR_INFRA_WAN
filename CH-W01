@@ -63,7 +63,7 @@ neighbor 10.98.230.1 remote-as 1836
 neighbor 10.98.230.3 remote-as 1836
 no auto-summary
 !
-access-list 10 permit 192.168.0.0 0.0.255.255
+access-list 10 permit 10.207.0.0 0.0.0.255
 !
 route-map PERMIT_OSPF_INTO_BGP permit 10
  match ip address 10
