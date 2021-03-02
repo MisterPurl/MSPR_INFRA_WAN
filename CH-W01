@@ -1,8 +1,8 @@
 conf t
-
+!
 ip cef
 mpls label protocol ldp
-
+!
 int s1/0
 ip address 10.98.200.6 255.255.255.254
 description CH-W01 TO CH-W02
@@ -18,7 +18,7 @@ ip address 10.98.200.11 255.255.255.254
 description CH-W01 TO FR-W02
 mpls ip
 no shutdown
-
+!
 int g3/0
 ip address 10.98.220.0 255.255.255.254
 description CH-W01 TO CH-CE-01
@@ -27,7 +27,7 @@ int g4/0
 ip address 10.98.220.2 255.255.255.254
 description CH-W01 TO CH-CE-02
 no shutdown
-
+!
 int s1/3
 ip address 10.98.230.0 255.255.255.254
 description CH-W01 TO PE-DC-01
@@ -36,13 +36,13 @@ int s2/0
 ip address 10.98.230.2 255.255.255.254
 description CH-W01 TO PE-DC-02
 no shutdown
-
+!
 int lo0
 ip address 10.98.199.3 255.255.255.255
 description loopback BGP
 no shutdown
 end
-
+!
 conf t 
 router ospf 100
 network 10.98.200.6 0.0.0.1 area 0
@@ -59,8 +59,8 @@ redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
 neighbor 10.98.199.1 remote-as 5000
 neighbor 10.98.199.2 remote-as 5000
 neighbor 10.98.199.4 remote-as 5000
-neighbor 1.1.1.1 remote-as 1836
-neighbor 2.2.2.2 remote-as 1836
+neighbor 10.98.230.1 remote-as 1836
+neighbor 10.98.230.3 remote-as 1836
 no auto-summary
 !
 access-list 10 permit 192.168.0.0 0.0.255.255

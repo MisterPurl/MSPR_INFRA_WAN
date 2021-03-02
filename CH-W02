@@ -59,8 +59,8 @@ redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
 neighbor 10.98.199.1 remote-as 5000
 neighbor 10.98.199.3 remote-as 5000
 neighbor 10.98.199.2 remote-as 5000
-neighbor 1.1.1.1 remote-as 1836
-neighbor 2.2.2.2 remote-as 1836
+neighbor 10.98.230.7 remote-as 1836
+neighbor 10.98.230.5 remote-as 1836
 no auto-summary
 !
 access-list 10 permit 192.168.0.0 0.0.255.255
