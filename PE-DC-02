@@ -1,0 +1,32 @@
+conf t
+
+ip cef
+mpls label protocol ldp
+
+int s1/0
+ip address 10.98.230.3 255.255.255.254
+description PE-DC-02 TO CH-W01
+mpls ip
+no shutdown
+
+int s1/1
+ip address 10.98.230.7 255.255.255.254
+description PE-DC-02 TO CH-W02
+mpls ip
+no shutdown
+
+int s1/2
+ip address 10.98.230.9 255.255.255.254
+description PE-DC-02 TO PE-DC-01
+mpls ip
+no shutdown
+end
+!
+conf t 
+router bgp 1836
+!redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
+neighbor 10.98.230.2 remote-as 5000
+neighbor 10.98.230.6 remote-as 5000
+neighbor 10.98.230.9 remote-as 1836
+no auto-summary
+end
