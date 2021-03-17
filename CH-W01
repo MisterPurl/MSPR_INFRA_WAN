@@ -43,24 +43,44 @@ description loopback BGP
 no shutdown
 end
 !
+conf t
+ip vrf INTERNE
+rd 100:100
+route-target export 100:100
+route-target import 100:100
+end
+!
+conf t
+router eigrp 100
+network 10.98.220.0 0.0.0.1
+network 10.98.220.2 0.0.0.1
+address-family ipv4 vrf INTERNE
+redistribute bgp 5000 metric 1500 100 255 1 1500
+network 10.98.220.0 0.0.0.1
+network 10.98.220.2 0.0.0.1
+autonomous-system 5000
+exit-address-family
+end
+!
 conf t 
 router ospf 100
 network 10.98.200.6 0.0.0.1 area 0
 network 10.98.200.2 0.0.0.1 area 0
 network 10.98.200.10 0.0.0.1 area 0
 network 10.98.199.3 0.0.0.0 area 0
-network 10.98.220.0 0.0.0.1 area 2
-network 10.98.220.2 0.0.0.1 area 2
 end
 !
 conf t 
 router bgp 5000
-redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
+redistribute eigrp 100
+redistribute connected
 neighbor 10.98.199.1 remote-as 5000
 neighbor 10.98.199.2 remote-as 5000
 neighbor 10.98.199.4 remote-as 5000
 neighbor 10.98.230.1 remote-as 1836
 neighbor 10.98.230.3 remote-as 1836
+address-family ipv4 vrf INTERNE
+exit-address-family
 no auto-summary
 !
 access-list 10 permit 10.207.0.0 0.0.0.255

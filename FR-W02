@@ -33,15 +33,32 @@ ip address 10.98.199.2 255.255.255.255
 description loopback BGP
 no shutdown
 end
-
+!
+conf t
+ip vrf INTERNE
+rd 100:100
+route-target export 100:100
+route-target import 100:100
+end
+!
+conf t
+router eigrp 100
+address-family ipv4 vrf INTERNE
+redistribute bgp 5000 metric 1500 100 255 1 1500
+network 10.98.210.4 0.0.0.1
+network 10.98.210.6 0.0.0.1
+autonomous-system 5000
+exit-address-family
+end
+!
 conf t 
 router ospf 100
 network 10.98.200.0 0.0.0.1 area 0
 network 10.98.200.10 0.0.0.1 area 0
 network 10.98.200.4 0.0.0.1 area 0
 network 10.98.199.2 0.0.0.0 area 0
-network 10.98.210.4 0.0.0.1 area 1
-network 10.98.210.6 0.0.0.1 area 1
+!network 10.98.210.4 0.0.0.1 area 1
+!network 10.98.210.6 0.0.0.1 area 1
 end
 !
 conf t 
@@ -50,6 +67,10 @@ redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
 neighbor 10.98.199.1 remote-as 5000
 neighbor 10.98.199.3 remote-as 5000
 neighbor 10.98.199.4 remote-as 5000
+address-family ipv4 vrf INTERNE
+redistribute connected
+redistribute eigrp 100
+exit-address-family
 no auto-summary
 !
 access-list 10 permit 10.203.0.0 0.0.0.255
