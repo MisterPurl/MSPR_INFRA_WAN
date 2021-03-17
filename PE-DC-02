@@ -28,15 +28,44 @@ description PE-DC-01 TO LAN-DC
 no shutdown
 end
 !
+conf t
+ip vrf INTERNE
+rd 100:100
+route-target export 100:100
+route-target import 100:100
+end
+!
+conf t
+ip prefix-list EIGRP permit 10.203.0.0/24
+ip prefix-list EIGRP permit 10.207.0.0/24
+ip prefix-list EIGRP permit 10.210.0.0/24
+route-map BGP_EIGRP deny 10
+match ip address prefix-list EIGRP
+route-map BGP_EIGRP permit 20
+end
+!
+conf t
+router eigrp 100
+network 10.210.0.0 0.0.0.255
+redistribute bgp 1836 metric 1500 100 255 1 1500
+redistribute bgp 1836 route-map BGP_EIGRP metric 1500 100 255 1 1500
+address-family ipv4 vrf INTERNE
+redistribute bgp 1836 metric 1500 100 255 1 1500
+network 10.210.0.0 0.0.0.255
+autonomous-system 1836
+exit-address-family
+end
+!
 conf t 
 router bgp 1836
-!redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
+redistribute connected
+redistribute eigrp 100
 neighbor 10.98.230.2 remote-as 5000
 neighbor 10.98.230.6 remote-as 5000
 neighbor 10.98.230.8 remote-as 1836
+address-family ipv4 vrf INTERNE
+redistribute connected
+redistribute eigrp 100
+exit-address-family
 no auto-summary
-!
-access-list 10 permit 10.210.0.0 0.0.0.255
-!
-route-map PERMIT_OSPF_INTO_BGP permit 10
- match ip address 10
+end

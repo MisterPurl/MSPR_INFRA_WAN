@@ -51,9 +51,19 @@ route-target import 100:100
 end
 !
 conf t
+ip prefix-list EIGRP permit 10.203.0.0/24
+ip prefix-list EIGRP permit 10.207.0.0/24
+ip prefix-list EIGRP permit 10.210.0.0/24
+route-map BGP_EIGRP deny 10
+match ip address prefix-list EIGRP
+route-map BGP_EIGRP permit 20
+end
+!
+conf t
 router eigrp 100
 network 10.98.220.0 0.0.0.1
 network 10.98.220.2 0.0.0.1
+redistribute bgp 5000 metric 1500 100 255 1 1500
 address-family ipv4 vrf INTERNE
 redistribute bgp 5000 metric 1500 100 255 1 1500
 network 10.98.220.0 0.0.0.1
@@ -82,8 +92,4 @@ neighbor 10.98.230.3 remote-as 1836
 address-family ipv4 vrf INTERNE
 exit-address-family
 no auto-summary
-!
-access-list 10 permit 10.207.0.0 0.0.0.255
-!
-route-map PERMIT_OSPF_INTO_BGP permit 10
- match ip address 10
+end
