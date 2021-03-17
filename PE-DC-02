@@ -22,6 +22,12 @@ mpls ip
 no shutdown
 end
 !
+int g3/0
+ip address 10.210.0.3 255.255.255.0
+description PE-DC-01 TO LAN-DC
+no shutdown
+end
+!
 conf t 
 router bgp 1836
 !redistribute ospf 100 route-map PERMIT_OSPF_INTO_BGP
@@ -29,4 +35,8 @@ neighbor 10.98.230.2 remote-as 5000
 neighbor 10.98.230.6 remote-as 5000
 neighbor 10.98.230.8 remote-as 1836
 no auto-summary
-end
+!
+access-list 10 permit 10.210.0.0 0.0.0.255
+!
+route-map PERMIT_OSPF_INTO_BGP permit 10
+ match ip address 10
