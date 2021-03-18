@@ -61,7 +61,7 @@ match ip address prefix-list defaultroute
 conf t
 router eigrp 100
 address-family ipv4 vrf INTERNE
- redistribute bgp 5000 metric 1 1 1 1 1
+ redistribute bgp 5000 route-map BGP_TO_EIGRP metric 1 1 1 1 1
  network 10.98.210.4 0.0.0.1
  network 10.98.210.6 0.0.0.1
  autonomous-system 100
