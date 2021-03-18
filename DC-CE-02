@@ -1,0 +1,25 @@
+conf t
+int g1/0
+ip address 10.98.230.13 255.255.255.254
+description DC-CE-02 TO PE-DC-01
+no shutdown
+int g2/0
+ip address 10.98.230.17 255.255.255.254
+description DC-CE-02 TO PE-DC-02
+no shutdown
+int f0/0
+ip address 10.210.0.3 255.255.255.0
+description LAN DC
+no shutdown
+vrrp 1 ip 10.210.0.1
+vrrp 1 description VIP-DC-DC
+vrrp 1 source-ip 10.210.0.3
+no vrrp 1 shutdown
+end
+!
+conf t
+router eigrp 100
+network 10.98.230.12 0.0.0.1
+network 10.98.230.16 0.0.0.1
+network 10.210.0.0 0.0.0.255
+end

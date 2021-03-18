@@ -20,11 +20,24 @@ ip address 10.98.230.8 255.255.255.254
 description PE-DC-01 TO PE-DC-02
 mpls ip
 no shutdown
-end
 !
 int g3/0
-ip address 10.210.0.2 255.255.255.0
-description PE-DC-01 TO LAN-DC
+ip vrf forwarding INTERNE
+ip address 10.98.230.10 255.255.255.0
+description PE-DC-01 TO DC-CE-01
+no shutdown
+!
+int g4/0
+ip vrf forwarding INTERNE
+ip address 10.98.230.12 255.255.255.0
+description PE-DC-01 TO DC-CE-02
+no shutdown
+end
+!
+conf t
+int lo0
+description loopback BGP
+ip address 10.98.199.5 255.255.255.255
 no shutdown
 end
 !
@@ -36,35 +49,67 @@ route-target import 100:100
 end
 !
 conf t
+ip prefix-list defaultroute seq 10 permit 0.0.0.0/0
 ip prefix-list EIGRP permit 10.203.0.0/24
 ip prefix-list EIGRP permit 10.207.0.0/24
-route-map BGP_EIGRP deny 10
+ip prefix-list EIGRP permit 10.210.0.0/24
+end
+!
+conf t
+route-map BGP_TO_EIGRP permit 10
 match ip address prefix-list EIGRP
-route-map BGP_EIGRP permit 20
+end
+!
+conf t
+route-map defaultroute permit 10
+match ip address prefix-list defaultroute
 end
 !
 conf t
 router eigrp 100
-network 10.210.0.0 0.0.0.255
-redistribute bgp 1836 metric 1500 100 255 1 1500
-redistribute bgp 1836 route-map BGP_EIGRP metric 1500 100 255 1 1500
 address-family ipv4 vrf INTERNE
-redistribute bgp 1836 metric 1500 100 255 1 1500
-network 10.210.0.0 0.0.0.255
-autonomous-system 1836
+ redistribute bgp 1836 route-map BGP_TO_EIGRP metric 1 1 1 1 1
+ network 10.98.230.10 0.0.0.1
+ network 10.98.230.12 0.0.0.1
+ autonomous-system 100
 exit-address-family
+no auto-summary
+end
+!
+conf t 
+router ospf 100
+network 10.98.230.0 0.0.0.1 area 1
+network 10.98.230.4 0.0.0.1 area 1
+network 10.98.230.8 0.0.0.1 area 1
+network 10.98.199.5 0.0.0.0 area 1
 end
 !
 conf t 
 router bgp 1836
-redistribute connected
-redistribute eigrp 100
-neighbor 10.98.230.0 remote-as 5000
-neighbor 10.98.230.4 remote-as 5000
-neighbor 10.98.230.9 remote-as 1836
+bgp log-neighbor-changes
+neighbor 10.98.199.1 remote-as 5000
+neighbor 10.98.199.1 update-source Loopback0
+neighbor 10.98.199.2 remote-as 5000
+neighbor 10.98.199.2 update-source Loopback0
+neighbor 10.98.199.3 remote-as 5000
+neighbor 10.98.199.3 update-source Loopback0
+neighbor 10.98.199.4 remote-as 5000
+neighbor 10.98.199.4 update-source Loopback0
+neighbor 10.98.199.6 remote-as 1836
+neighbor 10.98.199.6 update-source Loopback0
+address-family vpnv4
+ neighbor 10.98.199.1 activate
+ neighbor 10.98.199.1 send-community both
+ neighbor 10.98.199.2 activate
+ neighbor 10.98.199.2 send-community both
+ neighbor 10.98.199.3 activate
+ neighbor 10.98.199.3 send-community both
+ neighbor 10.98.199.4 activate
+ neighbor 10.98.199.4 send-community both
+ neighbor 10.98.199.6 activate
+ neighbor 10.98.199.6 send-community both
 address-family ipv4 vrf INTERNE
-redistribute connected
-redistribute eigrp 100
+ redistribute eigrp 100
 exit-address-family
 no auto-summary
 end
