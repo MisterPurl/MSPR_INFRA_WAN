@@ -51,25 +51,41 @@ route-target import 100:100
 end
 !
 conf t
+ip prefix-list defaultroute seq 10 permit 0.0.0.0/0
 ip prefix-list EIGRP permit 10.203.0.0/24
 ip prefix-list EIGRP permit 10.207.0.0/24
 ip prefix-list EIGRP permit 10.210.0.0/24
-route-map BGP_EIGRP deny 10
-match ip address prefix-list EIGRP
-route-map BGP_EIGRP permit 20
 end
+!
+conf t
+route-map BGP_TO_EIGRP permit 10
+match ip address prefix-list EIGRP
+end
+conf t
+route-map defaultroute permit 10
+match ip address prefix-list defaultroute
 !
 conf t
 router eigrp 100
 network 10.98.220.0 0.0.0.1
 network 10.98.220.2 0.0.0.1
 redistribute bgp 5000 metric 1500 100 255 1 1500
+redistribute bgp 5000 route-map BGP_TO_EIGRP metric 1500 100 255 1 1500
+address-family vpnv4
+  neighbor 10.98.199.1 activate
+  neighbor 10.98.199.1 send-community both
+  neighbor 10.98.199.2 activate
+  neighbor 10.98.199.2 send-community both
+  neighbor 10.98.199.4 activate
+  neighbor 10.98.199.4 send-community both
+ exit-address-family
 address-family ipv4 vrf INTERNE
 redistribute bgp 5000 metric 1500 100 255 1 1500
 network 10.98.220.0 0.0.0.1
 network 10.98.220.2 0.0.0.1
 autonomous-system 5000
 exit-address-family
+no auto-summary
 end
 !
 conf t 
