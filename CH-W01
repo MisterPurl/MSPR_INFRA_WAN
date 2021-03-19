@@ -19,6 +19,11 @@ description CH-W01 TO FR-W02
 mpls ip
 no shutdown
 !
+int g0/0
+description CH-W01 TO R1-FAI
+ip address 90.90.90.2 255.255.255.254
+no shutdown
+!
 int g3/0
 ip address 10.98.220.0 255.255.255.254
 description CH-W01 TO CH-CE-01
@@ -68,11 +73,13 @@ end
 conf t
 route-map defaultroute permit 10
 match ip address prefix-list defaultroute
+end
 !
 conf t
 router eigrp 100
 address-family ipv4 vrf INTERNE
  redistribute bgp 5000 route-map BGP_TO_EIGRP metric 1 1 1 1 1
+ redistribute bgp 5000 route-map defaultroute metric 1 1 1 1 1
  network 10.98.220.0 0.0.0.1
  network 10.98.220.2 0.0.0.1
  autonomous-system 100
@@ -88,6 +95,7 @@ network 10.98.200.10 0.0.0.1 area 0
 network 10.98.230.0 0.0.0.1 area 1
 network 10.98.230.2 0.0.0.1 area 1
 network 10.98.199.3 0.0.0.0 area 0
+network 90.90.90.2 0.0.0.1 area 2
 end
 !
 conf t 
@@ -99,9 +107,13 @@ neighbor 10.98.199.2 remote-as 5000
 neighbor 10.98.199.2 update-source Loopback0
 neighbor 10.98.199.4 remote-as 5000
 neighbor 10.98.199.4 update-source Loopback0
+neighbor 10.98.199.10 remote-as 5000
+neighbor 10.98.199.10 update-source Loopback0
 neighbor 10.98.199.5 remote-as 1836
+neighbor 10.98.199.5 ebgp-multihop 2
 neighbor 10.98.199.5 update-source Loopback0
 neighbor 10.98.199.6 remote-as 1836
+neighbor 10.98.199.6 ebgp-multihop 2
 neighbor 10.98.199.6 update-source Loopback0
 address-family vpnv4
  neighbor 10.98.199.1 activate
@@ -114,6 +126,8 @@ address-family vpnv4
  neighbor 10.98.199.5 send-community both
  neighbor 10.98.199.6 activate
  neighbor 10.98.199.6 send-community both
+ neighbor 10.98.199.10 activate
+ neighbor 10.98.199.10 send-community both
 address-family ipv4 vrf INTERNE
  redistribute eigrp 100
 exit-address-family

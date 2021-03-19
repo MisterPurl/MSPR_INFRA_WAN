@@ -86,10 +86,6 @@ neighbor 10.98.199.3 remote-as 5000
 neighbor 10.98.199.3 update-source Loopback0
 neighbor 10.98.199.4 remote-as 5000
 neighbor 10.98.199.4 update-source Loopback0
-neighbor 10.98.199.5 remote-as 5000
-neighbor 10.98.199.5 update-source Loopback0
-neighbor 10.98.199.6 remote-as 5000
-neighbor 10.98.199.6 update-source Loopback0
 address-family vpnv4
  neighbor 10.98.199.1 activate
  neighbor 10.98.199.1 send-community both
@@ -97,10 +93,6 @@ address-family vpnv4
  neighbor 10.98.199.3 send-community both
  neighbor 10.98.199.4 activate
  neighbor 10.98.199.4 send-community both
- neighbor 10.98.199.5 activate
- neighbor 10.98.199.5 send-community both
- neighbor 10.98.199.6 activate
- neighbor 10.98.199.6 send-community both
 address-family ipv4 vrf INTERNE
  redistribute eigrp 100
 exit-address-family

@@ -87,21 +87,15 @@ end
 conf t 
 router bgp 1836
 bgp log-neighbor-changes
-neighbor 10.98.199.1 remote-as 5000
-neighbor 10.98.199.1 update-source Loopback0
-neighbor 10.98.199.2 remote-as 5000
-neighbor 10.98.199.2 update-source Loopback0
 neighbor 10.98.199.3 remote-as 5000
+neighbor 10.98.199.3 ebgp-multihop 2
 neighbor 10.98.199.3 update-source Loopback0
 neighbor 10.98.199.4 remote-as 5000
+neighbor 10.98.199.3 ebgp-multihop 2
 neighbor 10.98.199.4 update-source Loopback0
 neighbor 10.98.199.6 remote-as 1836
 neighbor 10.98.199.6 update-source Loopback0
 address-family vpnv4
- neighbor 10.98.199.1 activate
- neighbor 10.98.199.1 send-community both
- neighbor 10.98.199.2 activate
- neighbor 10.98.199.2 send-community both
  neighbor 10.98.199.3 activate
  neighbor 10.98.199.3 send-community both
  neighbor 10.98.199.4 activate

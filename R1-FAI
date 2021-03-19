@@ -1,0 +1,66 @@
+conf t
+!
+ip cef
+mpls label protocol ldp
+end
+!
+conf t
+int g1/0
+description R1-FAI TO FR-W01
+ip address 90.90.90.1 255.255.255.254
+no shutdown
+!
+int g2/0
+description R1-FAI TO CH-W01
+ip address 90.90.90.3 255.255.255.254
+no shutdown
+!
+int g3/0
+description R1-FAI TO backbone-FAI
+ip address 90.90.90.4 255.255.255.254
+no shutdown
+!
+int lo0
+ip address 10.98.199.10 255.255.255.255
+description loopback BGP
+no shutdown
+end
+!
+conf t
+ip route 0.0.0.0 0.0.0.0 90.90.90.5
+end
+!
+conf t
+ip prefix-list defaultroute seq 10 permit 0.0.0.0/0
+end
+!
+conf t
+route-map defaultroute permit 10
+match ip address prefix-list defaultroute
+end
+!
+conf t
+router ospf 100
+network 10.98.199.10 0.0.0.0 area 2
+network 90.90.90.0 0.0.0.1 area 2
+network 90.90.90.2 0.0.0.1 area 2
+end
+!
+conf t 
+router bgp 5000
+bgp log-neighbor-changes
+redistribute connected
+redistribute static
+default-information originate
+neighbor 10.98.199.1 remote-as 5000
+neighbor 10.98.199.1 update-source Loopback0
+neighbor 10.98.199.3 remote-as 5000
+neighbor 10.98.199.3 update-source Loopback0
+address-family vpnv4
+ neighbor 10.98.199.1 activate
+ neighbor 10.98.199.1 send-community both
+ neighbor 10.98.199.3 activate
+ neighbor 10.98.199.3 send-community both
+exit-address-family
+no auto-summary
+end

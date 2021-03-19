@@ -100,8 +100,10 @@ neighbor 10.98.199.3 update-source Loopback0
 neighbor 10.98.199.2 remote-as 5000
 neighbor 10.98.199.2 update-source Loopback0
 neighbor 10.98.199.5 remote-as 1836
+neighbor 10.98.199.5 ebgp-multihop 2
 neighbor 10.98.199.5 update-source Loopback0
 neighbor 10.98.199.6 remote-as 1836
+neighbor 10.98.199.5 ebgp-multihop 2
 neighbor 10.98.199.6 update-source Loopback0
 address-family vpnv4
   neighbor 10.98.199.1 activate
