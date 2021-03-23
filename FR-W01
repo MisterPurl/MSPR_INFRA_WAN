@@ -49,11 +49,34 @@ route-target import 100:100
 end
 !
 conf t
-ip prefix-list defaultroute seq 10 permit 0.0.0.0/0
+ip vrf INTERNE
+rd 100:100
+route-target export 100:100
+route-target import 100:100
+end
+!
+conf t
 ip prefix-list EIGRP permit 0.0.0.0/0
 ip prefix-list EIGRP permit 10.203.0.0/24
+ip prefix-list EIGRP permit 10.203.1.0/24
+ip prefix-list EIGRP permit 10.203.2.0/24
+ip prefix-list EIGRP permit 10.203.3.0/24
+ip prefix-list EIGRP permit 10.203.4.0/24
+ip prefix-list EIGRP permit 10.203.5.0/24
+!
 ip prefix-list EIGRP permit 10.207.0.0/24
+ip prefix-list EIGRP permit 10.207.1.0/24
+ip prefix-list EIGRP permit 10.207.2.0/24
+ip prefix-list EIGRP permit 10.207.3.0/24
+ip prefix-list EIGRP permit 10.207.4.0/24
+ip prefix-list EIGRP permit 10.207.5.0/24
+!
 ip prefix-list EIGRP permit 10.210.0.0/24
+ip prefix-list EIGRP permit 10.210.1.0/24
+ip prefix-list EIGRP permit 10.210.2.0/24
+ip prefix-list EIGRP permit 10.210.3.0/24
+ip prefix-list EIGRP permit 10.210.4.0/24
+ip prefix-list EIGRP permit 10.210.5.0/24
 end
 !
 conf t
@@ -68,7 +91,6 @@ conf t
 router eigrp 100
 address-family ipv4 vrf INTERNE
  redistribute bgp 5000 route-map BGP_TO_EIGRP metric 1 1 1 1 1
- redistribute bgp 5000 route-map defaultroute metric 1 1 1 1 1
  network 10.98.210.0 0.0.0.1
  network 10.98.210.2 0.0.0.1
  autonomous-system 100
@@ -91,10 +113,13 @@ default-information originate
 bgp log-neighbor-changes
 neighbor 10.98.199.2 remote-as 5000
 neighbor 10.98.199.2 update-source Loopback0
+neighbor 10.98.199.2 next-hop-self
 neighbor 10.98.199.3 remote-as 5000
 neighbor 10.98.199.3 update-source Loopback0
+neighbor 10.98.199.3 next-hop-self
 neighbor 10.98.199.4 remote-as 5000
 neighbor 10.98.199.4 update-source Loopback0
+neighbor 10.98.199.4 next-hop-self
 neighbor 10.98.199.10 remote-as 5000
 neighbor 10.98.199.10 update-source Loopback0
 neighbor 10.98.199.10 default-originate
@@ -110,6 +135,8 @@ address-family vpnv4
  neighbor 10.98.199.10 default-originate
 address-family ipv4 vrf INTERNE
  redistribute eigrp 100
+address-family ipv4
+ default-information originate
 exit-address-family
 no auto-summary
 end

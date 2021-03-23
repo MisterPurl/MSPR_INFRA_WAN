@@ -27,7 +27,7 @@ no shutdown
 end
 !
 conf t
-ip route 0.0.0.0 0.0.0.0 90.90.90.5
+ip route 0.0.0.0 0.0.0.0 Loopback0
 end
 !
 conf t

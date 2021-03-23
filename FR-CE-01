@@ -7,14 +7,54 @@ int g2/0
 ip address 10.98.210.5 255.255.255.254
 description FR-CE-01 TO FR-W02
 no shutdown
-int f0/0
-ip address 10.203.0.2 255.255.255.0
-description FR-CE-01 TO FR-W02
+!
+interface FastEthernet0/0.10
+ description vlan 10
+ encapsulation dot1Q 10
+ ip address 10.203.0.2 255.255.255.0
+ vrrp 1 description lan-1
+ vrrp 1 ip 10.203.0.1
 no shutdown
-vrrp 1 ip 10.203.0.1
-vrrp 1 description VIP-FR-DC
-vrrp 1 source-ip 10.203.0.2
-no vrrp 1 shutdown
+!
+interface FastEthernet0/0.11
+ description vlan 11
+ encapsulation dot1Q 11
+ ip address 10.203.1.2 255.255.255.0
+ vrrp 2 description lan-2
+ vrrp 2 ip 10.203.1.1
+no shutdown
+!
+interface FastEthernet0/0.12
+ description vlan 12
+ encapsulation dot1Q 12
+ ip address 10.203.2.2 255.255.255.0
+ vrrp 3 description lan-3
+ vrrp 3 ip 10.203.2.1
+no shutdown
+!
+interface FastEthernet0/0.13
+ description vlan 13
+ encapsulation dot1Q 13
+ ip address 10.203.3.2 255.255.255.0
+ vrrp 4 description lan-4
+ vrrp 4 ip 10.203.3.1
+no shutdown
+!
+interface FastEthernet0/0.14
+ description vlan 14
+ encapsulation dot1Q 14
+ ip address 10.203.4.2 255.255.255.0
+ vrrp 5 description lan-5
+ vrrp 5 ip 10.203.4.1
+no shutdown
+!
+interface FastEthernet0/0.15
+ description vlan 15
+ encapsulation dot1Q 15
+ ip address 10.203.5.2 255.255.255.0
+ vrrp 6 description lan-6
+ vrrp 6 ip 10.203.5.1
+no shutdown
 end
 !
 conf t
@@ -22,4 +62,10 @@ router eigrp 100
 network 10.98.210.0 0.0.0.1
 network 10.98.210.4 0.0.0.1
 network 10.203.0.0 0.0.0.255
+network 10.203.1.0 0.0.0.255
+network 10.203.2.0 0.0.0.255
+network 10.203.3.0 0.0.0.255
+network 10.203.4.0 0.0.0.255
+network 10.203.5.0 0.0.0.255
+end
 end

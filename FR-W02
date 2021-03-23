@@ -44,10 +44,27 @@ route-target import 100:100
 end
 !
 conf t
-ip prefix-list defaultroute seq 10 permit 0.0.0.0/0
+ip prefix-list EIGRP permit 0.0.0.0/0
 ip prefix-list EIGRP permit 10.203.0.0/24
+ip prefix-list EIGRP permit 10.203.1.0/24
+ip prefix-list EIGRP permit 10.203.2.0/24
+ip prefix-list EIGRP permit 10.203.3.0/24
+ip prefix-list EIGRP permit 10.203.4.0/24
+ip prefix-list EIGRP permit 10.203.5.0/24
+!
 ip prefix-list EIGRP permit 10.207.0.0/24
+ip prefix-list EIGRP permit 10.207.1.0/24
+ip prefix-list EIGRP permit 10.207.2.0/24
+ip prefix-list EIGRP permit 10.207.3.0/24
+ip prefix-list EIGRP permit 10.207.4.0/24
+ip prefix-list EIGRP permit 10.207.5.0/24
+!
 ip prefix-list EIGRP permit 10.210.0.0/24
+ip prefix-list EIGRP permit 10.210.1.0/24
+ip prefix-list EIGRP permit 10.210.2.0/24
+ip prefix-list EIGRP permit 10.210.3.0/24
+ip prefix-list EIGRP permit 10.210.4.0/24
+ip prefix-list EIGRP permit 10.210.5.0/24
 end
 !
 conf t
